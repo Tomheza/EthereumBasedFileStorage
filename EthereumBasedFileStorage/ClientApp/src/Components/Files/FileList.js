@@ -55,8 +55,8 @@ export default function FileList(props) {
               <TableHead>
                 <TableRow>
                   <TableCell>File Name</TableCell>
-                  <TableCell align="right">Modified</TableCell>
-                  <TableCell align="right">User</TableCell>
+                  <TableCell>Modified</TableCell>
+                  <TableCell>User</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -65,8 +65,8 @@ export default function FileList(props) {
                     <TableCell component="th" scope="row">
                       {file.name}
                     </TableCell>
-                    <TableCell align="right"></TableCell>
-                    <TableCell align="right"></TableCell>
+                    <TableCell>{file.modified}</TableCell>
+                    <TableCell>{file.user}</TableCell>
                     <TableCell align="right">
                       <More />
                     </TableCell>

@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +19,9 @@ namespace EthereumBasedFileStorage.Controllers
             return files.Select(f => new File
             {
                 Name = f.Name,
-                DirectoryName = f.DirectoryName
+                DirectoryName = f.DirectoryName,
+                Modified = f.LastAccessTime.ToString(CultureInfo.InvariantCulture),
+                User = "Tomheza"
             }).ToArray();
         }
     }
@@ -26,5 +30,7 @@ namespace EthereumBasedFileStorage.Controllers
     {
         public string Name { get; set; }
         public string DirectoryName { get; set; }
+        public string Modified { get; set; }
+        public string User { get; set; }
     }
 }
