@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EthereumBasedFileStorage.Storage\EthereumBasedFileStorage.Storage.csproj" />
+    <ProjectReference Include="..\EthereumBasedFileStorage.Services\EthereumBasedFileStorage.Services.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

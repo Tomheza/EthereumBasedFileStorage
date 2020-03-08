@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
-using System.Linq;
+using EthereumBasedFileStorage.Services;
 using EthereumBasedFileStorage.Storage;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,16 +10,19 @@ namespace EthereumBasedFileStorage.Controllers
     [Route("[controller]")]
     public class FileController : Controller
     {
-        [HttpGet]
-        public File[] GetFiles()
+        private readonly IFileStorageService _fileStorageService;
+
+        public FileController(IFileStorageService fileStorageService)
         {
-            using FileStorageContext dbContext = new FileStorageContext();
-            return dbContext.Files.ToList().Select(f => new File
-            {
-                Name = f.FileName,
-                Modified = f.Modified.ToString(CultureInfo.InvariantCulture),
-                User = "Tomheza"
-            }).ToArray();
+            _fileStorageService = fileStorageService;
+        }
+
+        [HttpGet]
+        public void GetFiles()
+        {
+            var files = _fileStorageService.GetFiles();
+
+          
         }
 
         [HttpPost]
@@ -34,9 +36,10 @@ namespace EthereumBasedFileStorage.Controllers
 
             await using var ms = new MemoryStream();
             await file.CopyToAsync(ms);
+
             var fileBytes = ms.ToArray();
 
-            await using FileStorageContext dbContext = new FileStorageContext();
+            await using var dbContext = new FileStorageContext();
             dbContext.Files.Add(new Storage.File
             {
                 Id = Guid.NewGuid(),
@@ -48,13 +51,5 @@ namespace EthereumBasedFileStorage.Controllers
 
             dbContext.SaveChanges();
         }
-    }
-
-    public class File
-    {
-        public string Name { get; set; }
-        public string DirectoryName { get; set; }
-        public string Modified { get; set; }
-        public string User { get; set; }
     }
 }
