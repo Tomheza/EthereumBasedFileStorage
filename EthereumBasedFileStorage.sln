@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EthereumBasedFileStorage", "EthereumBasedFileStorage\EthereumBasedFileStorage.csproj", "{FD9EA4F4-1646-48A2-A7A2-8FB4641FF2F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EthereumBasedFileStorage", "EthereumBasedFileStorage\EthereumBasedFileStorage.csproj", "{FD9EA4F4-1646-48A2-A7A2-8FB4641FF2F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EthereumBasedFileStorage.Storage", "EthereumBasedFileStorage.Storage\EthereumBasedFileStorage.Storage.csproj", "{94A1BF39-18A2-4C83-B246-558AFECF099A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{FD9EA4F4-1646-48A2-A7A2-8FB4641FF2F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD9EA4F4-1646-48A2-A7A2-8FB4641FF2F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD9EA4F4-1646-48A2-A7A2-8FB4641FF2F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94A1BF39-18A2-4C83-B246-558AFECF099A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94A1BF39-18A2-4C83-B246-558AFECF099A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94A1BF39-18A2-4C83-B246-558AFECF099A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94A1BF39-18A2-4C83-B246-558AFECF099A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

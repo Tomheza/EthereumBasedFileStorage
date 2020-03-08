@@ -1,3 +1,5 @@
+using System.ComponentModel;
+using EthereumBasedFileStorage.Storage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,6 +29,9 @@ namespace EthereumBasedFileStorage
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            Settings.ConnectionString = Configuration.GetSection("ConnectionStrings:DefaultConnection").Value;
+            services.AddDbContext<FileStorageContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

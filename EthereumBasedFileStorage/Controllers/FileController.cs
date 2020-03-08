@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using EthereumBasedFileStorage.Storage;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EthereumBasedFileStorage.Controllers
@@ -13,16 +14,39 @@ namespace EthereumBasedFileStorage.Controllers
         [HttpGet]
         public File[] GetFiles()
         {
-            var directory = new DirectoryInfo(@"C:\Users\zemgt\Downloads");
-            var files = directory.GetFiles();
-
-            return files.Select(f => new File
+            using FileStorageContext dbContext = new FileStorageContext();
+            return dbContext.Files.ToList().Select(f => new File
             {
-                Name = f.Name,
-                DirectoryName = f.DirectoryName,
-                Modified = f.LastAccessTime.ToString(CultureInfo.InvariantCulture),
+                Name = f.FileName,
+                Modified = f.Modified.ToString(CultureInfo.InvariantCulture),
                 User = "Tomheza"
             }).ToArray();
+        }
+
+        [HttpPost]
+        [Route("upload")]
+        public async void UploadFile()
+        {
+            var file = Request.Form.Files[0];
+
+            if (!(file?.Length > 0)) 
+                return;
+
+            await using var ms = new MemoryStream();
+            await file.CopyToAsync(ms);
+            var fileBytes = ms.ToArray();
+
+            await using FileStorageContext dbContext = new FileStorageContext();
+            dbContext.Files.Add(new Storage.File
+            {
+                Id = Guid.NewGuid(),
+                FileName = file.FileName,
+                Added = DateTime.Now,
+                Content = fileBytes,
+                Modified = DateTime.Now
+            });
+
+            dbContext.SaveChanges();
         }
     }
 
