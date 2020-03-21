@@ -16,8 +16,6 @@ export default function UploadFile() {
   const classes = useStyles();
 
   const onChange = e => {
-    console.log(e.target);
-    console.log(e.target.files[0]);
     setFile(e.target.files[0]);
     setFileName(e.target.files[0].name);
   };
@@ -26,19 +24,21 @@ export default function UploadFile() {
     e.preventDefault();
 
     var data = new FormData();
-    data.append('file', file);
+    data.append("file", file);
 
-    let uploadFileRequest ={
-        method: "POST",
-        headers: {
-            "Content-type": "multipart/form-data"
-        },
-    }
+    let uploadFileRequest = {
+      method: "POST",
+      headers: {
+        "Content-type": "multipart/form-data"
+      }
+    };
 
     try {
-      console.log('trying to publish file')
+      console.log("trying to publish file");
       const res = await axios.post("/file/upload", data, uploadFileRequest);
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -57,10 +57,7 @@ export default function UploadFile() {
         ></input>
       </Button>
 
-      <Button
-        variant="contained"
-        component="label"
-      >
+      <Button variant="contained" component="label">
         Submit
         <input
           type="submit"

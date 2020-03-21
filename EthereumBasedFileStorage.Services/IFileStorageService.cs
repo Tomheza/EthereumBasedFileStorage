@@ -1,4 +1,4 @@
-﻿using EthereumBasedFileStorage.Storage;
+﻿using EthereumBasedFileStorage.Services.Models;
 
 namespace EthereumBasedFileStorage.Services
 {

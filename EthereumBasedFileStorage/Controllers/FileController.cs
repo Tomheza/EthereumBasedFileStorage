@@ -18,9 +18,9 @@ namespace EthereumBasedFileStorage.Controllers
         }
 
         [HttpGet]
-        public void GetFiles()
+        public Services.Models.File[] GetFiles()
         {
-            var files = _fileStorageService.GetFiles();
+            return _fileStorageService.GetFiles();
 
           
         }
@@ -39,17 +39,20 @@ namespace EthereumBasedFileStorage.Controllers
 
             var fileBytes = ms.ToArray();
 
-            await using var dbContext = new FileStorageContext();
-            dbContext.Files.Add(new Storage.File
-            {
-                Id = Guid.NewGuid(),
-                FileName = file.FileName,
-                Added = DateTime.Now,
-                Content = fileBytes,
-                Modified = DateTime.Now
-            });
 
-            dbContext.SaveChanges();
+            //_fileStorageService.
+
+            //await using var dbContext = new FileStorageContext();
+            //dbContext.Files.Add(new File
+            //{
+            //    Id = Guid.NewGuid(),
+            //    FileName = file.FileName,
+            //    Added = DateTime.Now,
+            //    Content = fileBytes,
+            //    Modified = DateTime.Now
+            //});
+
+            //dbContext.SaveChanges();
         }
     }
 }

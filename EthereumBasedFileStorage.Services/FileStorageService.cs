@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
+using EthereumBasedFileStorage.Services.Models;
 using EthereumBasedFileStorage.Storage;
 
 namespace EthereumBasedFileStorage.Services
@@ -8,13 +10,11 @@ namespace EthereumBasedFileStorage.Services
         public File[] GetFiles()
         {
             using var dbContext = new FileStorageContext();
-            return dbContext.Files.ToArray().Select(f => new File
+            return dbContext.Files.ToArray().Select(f => new Models.File
             {
-                //Name = f.FileName,
-                //Modified = f.Modified.ToString(CultureInfo.InvariantCulture),
-                //User = "Tomheza"
+                FileName = f.FileName,
+                Modified = f.Modified.ToString(CultureInfo.InvariantCulture),
             }).ToArray();
-
         }
     }
 }

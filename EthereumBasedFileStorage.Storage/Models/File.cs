@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EthereumBasedFileStorage.Storage
+namespace EthereumBasedFileStorage.Storage.Models
 {
     public class File
     {
