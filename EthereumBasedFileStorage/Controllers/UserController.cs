@@ -33,14 +33,15 @@ namespace EthereumBasedFileStorage.Controllers
         [Route("login")]
         public IActionResult Login(User user)
         {
-            var authenticatedUserTokens = userService.Login(user);
+            var authenticatedUserToken = userService.Login(user);
 
-            if (authenticatedUserTokens != null)
+            if (authenticatedUserToken != null)
             {
                 return Ok(new
                 {
-                    accessToken = authenticatedUserTokens.AccessToken,
-                    refreshToken = authenticatedUserTokens.RefreshToken
+                    username = authenticatedUserToken.Username,
+                    accessToken = authenticatedUserToken.AccessToken,
+                    refreshToken = authenticatedUserToken.RefreshToken
                 });
             }
 

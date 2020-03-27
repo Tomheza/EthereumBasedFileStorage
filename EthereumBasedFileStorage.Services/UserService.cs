@@ -79,7 +79,7 @@ namespace EthereumBasedFileStorage.Services
             var refreshToken = GenerateRefreshToken();
             SaveRefreshToken(refreshToken, user);
 
-            return new Token(new JwtSecurityTokenHandler().WriteToken(accessToken), refreshToken);
+            return new Token(user.Username, new JwtSecurityTokenHandler().WriteToken(accessToken), refreshToken);
         }
 
         private static void SaveRefreshToken(string token, User user)

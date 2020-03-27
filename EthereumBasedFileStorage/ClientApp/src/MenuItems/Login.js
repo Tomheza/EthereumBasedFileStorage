@@ -1,47 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import { Container, Box, Button, TextField } from "@material-ui/core";
 import { authHeader } from "../Helpers/AuthorizationHeader";
-import axios from "axios";
+import { UserContext } from "../Context/UserContext";
+import { fetchRequest } from "../Helpers/AuthMiddleware";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [userDisplayName, setUserDisplayName] = useContext(UserContext);
 
-  const onLogin = async () => {
-    console.log(username);
-    console.log(password);
+  var loginEndPoint = "user/login";
 
-    let accountInfo = {
+  const onLogin = useCallback(() => {
+    var accountInfo = {
       Username: username,
       Password: password
     };
 
-    // let token = `Bearer ${authHeader()}`;s
+    var tokenHeader = authHeader();
+
     let loginRequest = {
       method: "POST",
       headers: {
+        tokenHeader,
         "Content-Type": "application/json"
       },
       body: JSON.stringify(accountInfo)
     };
 
-    console.log(loginRequest);
-
-    console.log("trying to login");
-    console.log(accountInfo);
-
-    fetch("user/login", loginRequest)
+    fetchRequest(loginEndPoint, loginRequest)
       .then(response => {
-        if (!response.ok) {
-          throw new Error("Could not login user");
-        }
-        throw new Error("Could not login user");
-      })
-      .then(response => {
-        localStorage.setItem("refreshToken", response.token);
+        localStorage.setItem("accessToken", response.accessToken);
+        localStorage.setItem("refreshToken", response.refreshToken);
+        setUserDisplayName(response.username);
       })
       .catch(error => console.log(error));
-  };
+  }, [username, password]);
 
   return (
     <Container>
