@@ -1,15 +1,35 @@
 import React, { useState, useContext, useCallback } from "react";
-import { Container, Box, Button, TextField } from "@material-ui/core";
+import {
+  Container,
+  Box,
+  Button,
+  TextField,
+  makeStyles
+} from "@material-ui/core";
 import { authHeader } from "../Helpers/AuthorizationHeader";
 import { UserContext } from "../Context/UserContext";
 import { fetchRequest } from "../Helpers/AuthMiddleware";
 
-export default function Login() {
+
+const useStyles = makeStyles(theme => ({
+  margin: {
+    margin: theme.spacing(1),
+    width: "25%"
+  },
+  maxWidth: {
+    width: "100%"
+  }
+}));
+
+const Login = props => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [userDisplayName, setUserDisplayName] = useContext(UserContext);
 
+  var style = useStyles();
+
   var loginEndPoint = "user/login";
+  var history = props.history;
 
   const onLogin = useCallback(() => {
     var accountInfo = {
@@ -33,31 +53,46 @@ export default function Login() {
         localStorage.setItem("accessToken", response.accessToken);
         localStorage.setItem("refreshToken", response.refreshToken);
         setUserDisplayName(response.username);
+        history.push("/");
       })
       .catch(error => console.log(error));
   }, [username, password]);
 
   return (
-    <Container>
-      <Box m={3}>
-        <TextField
-          id="outlined-basic"
-          label="Username"
-          variant="outlined"
-          onChange={event => setUsername(event.target.value)}
-          value={username}
-        ></TextField>
-        <TextField
-          id="outlined-password-input"
-          type="password"
-          variant="outlined"
-          onChange={event => setPassword(event.target.value)}
-          value={password}
-        ></TextField>
-        <Button variant="contained" component="label" onClick={onLogin}>
-          Login
-        </Button>
-      </Box>
-    </Container>
+    <Box
+      m={3}
+      display="flex"
+      className={style.maxWidth}
+      flexDirection="column"
+      alignItems="center"
+    >
+      <TextField
+        id="outlined-basic"
+        label="Username"
+        variant="outlined"
+        className={style.margin}
+        onChange={event => setUsername(event.target.value)}
+        value={username}
+      ></TextField>
+      <TextField
+        id="outlined-password-input"
+        label="Password"
+        type="password"
+        variant="outlined"
+        className={style.margin}
+        onChange={event => setPassword(event.target.value)}
+        value={password}
+      ></TextField>
+      <Button
+        variant="contained"
+        component="label"
+        onClick={onLogin}
+        className={style.margin}
+      >
+        Login
+      </Button>
+    </Box>
   );
-}
+};
+
+export default Login;

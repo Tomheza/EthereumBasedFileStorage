@@ -1,5 +1,7 @@
-﻿using EthereumBasedFileStorage.Services;
+﻿using System.Net.Http;
+using EthereumBasedFileStorage.Services;
 using EthereumBasedFileStorage.Services.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EthereumBasedFileStorage.Controllers
@@ -26,7 +28,7 @@ namespace EthereumBasedFileStorage.Controllers
                 return BadRequest("User already exists");
             }
 
-            return Ok();
+            return Ok(new {placeholder = "check this out later"});
         }
 
         [HttpPost]

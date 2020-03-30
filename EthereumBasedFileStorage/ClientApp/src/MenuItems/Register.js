@@ -1,23 +1,38 @@
-import React, { useState } from "react";
-import { Container, Box, Button, TextField } from "@material-ui/core";
-import { authHeader } from "../Helpers/AuthorizationHeader";
-import axios from "axios";
+import React, { useState, useCallback } from "react";
+import {
+  Container,
+  Box,
+  Button,
+  TextField,
+  makeStyles
+} from "@material-ui/core";
+import { fetchRequest } from "../Helpers/AuthMiddleware";
 
-export default function Register() {
+const useStyles = makeStyles(theme => ({
+  margin: {
+    margin: theme.spacing(1),
+    width: "25%"
+  },
+  maxWidth: {
+    width: "100%"
+  }
+}));
+
+const Register = props => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const onRegister = async () => {
-    console.log(username);
-    console.log(password);
+  var registerEndpoint = "user/register";
+  var history = props.history;
+  const style = useStyles();
 
-    let accountInfo = {
+  const onRegister = useCallback(() => {
+    var accountInfo = {
       Username: username,
       Password: password
     };
 
-    let token = `Bearer ${authHeader()}`;
-    let registerRequest = {
+    var registerRequest = {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -25,45 +40,48 @@ export default function Register() {
       body: JSON.stringify(accountInfo)
     };
 
-    console.log(registerRequest);
-
-    console.log("trying to register");
-    console.log(accountInfo);
-
-    fetch("user/register", registerRequest)
+    fetchRequest(registerEndpoint, registerRequest)
       .then(response => {
-        if (!response.ok) {
-          throw new Error("Could not register user");
-        }
-        throw new Error("Could not register user");
-      })
-      .then(response => {
-        localStorage.setItem("refreshToken", response.token);
+        console.log(response);
+        history.push("/login");
       })
       .catch(error => console.log(error));
-  };
+  }, [username, password]);
 
   return (
-    <Container>
-      <Box m={3}>
-        <TextField
-          id="outlined-basic"
-          label="Username"
-          variant="outlined"
-          onChange={event => setUsername(event.target.value)}
-          value={username}
-        ></TextField>
-        <TextField
-          id="outlined-password-input"
-          type="password"
-          variant="outlined"
-          onChange={event => setPassword(event.target.value)}
-          value={password}
-        ></TextField>
-        <Button variant="contained" component="label" onClick={onRegister}>
-          Register
-        </Button>
-      </Box>
-    </Container>
+    <Box
+      m={3}
+      display="flex"
+      className={style.maxWidth}
+      flexDirection="column"
+      alignItems="center"
+    >
+      <TextField
+        id="outlined-basic"
+        label="Username"
+        variant="outlined"
+        className={style.margin}
+        onChange={event => setUsername(event.target.value)}
+        value={username}
+      ></TextField>
+      <TextField
+        id="outlined-password-input"
+        label="Password"
+        type="password"
+        variant="outlined"
+        className={style.margin}
+        onChange={event => setPassword(event.target.value)}
+        value={password}
+      ></TextField>
+      <Button
+        variant="contained"
+        component="label"
+        onClick={onRegister}
+        className={style.margin}
+      >
+        Register
+      </Button>
+    </Box>
   );
-}
+};
+export default Register;
