@@ -4,7 +4,8 @@ namespace EthereumBasedFileStorage.Services
 {
     public interface IUserService
     {
-        Storage.Models.User Register(User user);
+        Token Register(User user);
         Token Login(User user);
+        Token GetNewTokenOrDefault(Token token);
     }
 }

@@ -39,15 +39,24 @@ namespace EthereumBasedFileStorage.Controllers
 
             if (authenticatedUserToken != null)
             {
-                return Ok(new
-                {
-                    username = authenticatedUserToken.Username,
-                    accessToken = authenticatedUserToken.AccessToken,
-                    refreshToken = authenticatedUserToken.RefreshToken
-                });
+                return Ok(authenticatedUserToken);
             }
 
             return BadRequest("User does not exist");
+        }
+
+        [HttpPost]
+        [Route("refreshToken")]
+        public IActionResult Refresh(Token token)
+        {
+            var newToken = userService.GetNewTokenOrDefault(token);
+
+            if (newToken != null)
+            {
+                return Ok(newToken);
+            }
+
+            return BadRequest("Token couldn't be refreshed, try logging in.");
         }
     }
 }

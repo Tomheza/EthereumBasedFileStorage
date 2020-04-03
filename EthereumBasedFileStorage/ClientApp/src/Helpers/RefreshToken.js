@@ -1,8 +1,8 @@
-export async function refresh(jwtToken, refreshToken) {
-  let endpoint = "/user/refreshtoken";
+export async function refresh(accessToken, refreshToken) {
+  let endpoint = "/user/refreshToken";
 
   let dataToSend = {
-    AccessToken: jwtToken,
+    AccessToken: accessToken,
     RefreshToken: refreshToken
   };
 

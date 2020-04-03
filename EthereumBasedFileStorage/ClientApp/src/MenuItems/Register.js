@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useContext } from "react";
 import {
   Container,
   Box,
@@ -7,6 +7,7 @@ import {
   makeStyles
 } from "@material-ui/core";
 import { fetchRequest } from "../Helpers/AuthMiddleware";
+import { UserContext } from "../Context/UserContext";
 
 const useStyles = makeStyles(theme => ({
   margin: {
@@ -21,6 +22,7 @@ const useStyles = makeStyles(theme => ({
 const Register = props => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [userDisplayName, setUserDisplayName] = useContext(UserContext);
 
   var registerEndpoint = "user/register";
   var history = props.history;
@@ -42,8 +44,10 @@ const Register = props => {
 
     fetchRequest(registerEndpoint, registerRequest)
       .then(response => {
-        console.log(response);
-        history.push("/login");
+        localStorage.setItem("accessToken", response.accessToken);
+        localStorage.setItem("refreshToken", response.refreshToken);
+        setUserDisplayName(response.username);
+        history.push("/");
       })
       .catch(error => console.log(error));
   }, [username, password]);

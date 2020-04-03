@@ -2,9 +2,13 @@
 {
     public class Token
     {
-        public string Username { get; }
-        public string AccessToken { get; }
-        public string RefreshToken { get; }
+        public string Username { get; set; }
+        public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
+
+        public Token()
+        {
+        }
 
         public Token(string username, string accessToken, string refreshToken)
         {

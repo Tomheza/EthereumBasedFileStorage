@@ -1,7 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using EthereumBasedFileStorage.Services;
-using EthereumBasedFileStorage.Storage;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EthereumBasedFileStorage.Controllers
@@ -21,14 +19,15 @@ namespace EthereumBasedFileStorage.Controllers
         public Services.Models.File[] GetFiles()
         {
             return _fileStorageService.GetFiles();
-
-          
         }
 
         [HttpPost]
         [Route("upload")]
         public async void UploadFile()
         {
+            if (Request.Form.Files.Count == 0)
+                return;
+
             var file = Request.Form.Files[0];
 
             if (!(file?.Length > 0)) 

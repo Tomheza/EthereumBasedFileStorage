@@ -22,7 +22,7 @@ namespace EthereumBasedFileStorage.Services
             this.config = config;
         }
 
-        public Storage.Models.User Register(User user)
+        public Token Register(User user)
         {
             if (string.IsNullOrWhiteSpace(user.Username))
             {
@@ -44,11 +44,13 @@ namespace EthereumBasedFileStorage.Services
             CreatePasswordHash(user.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
             var databaseUser = new Storage.Models.User
-                { Username = user.Username, PasswordHash = passwordHash, PasswordSalt = passwordSalt };
+                {Username = user.Username, PasswordHash = passwordHash, PasswordSalt = passwordSalt};
             dbContext.Users.Add(databaseUser);
             dbContext.SaveChanges();
 
-            return databaseUser;
+            var token = Login(user);
+
+            return token;
         }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
@@ -72,7 +74,7 @@ namespace EthereumBasedFileStorage.Services
         {
             var dbUser = Authenticate(user);
 
-            if (dbUser == null) 
+            if (dbUser == null)
                 return null;
 
             var accessToken = GenerateAccessToken(user);
@@ -109,7 +111,9 @@ namespace EthereumBasedFileStorage.Services
                 return null;
             }
 
-            return !VerifyPasswordHash(user.Password, databaseUser.PasswordHash, databaseUser.PasswordSalt) ? null : databaseUser;
+            return !VerifyPasswordHash(user.Password, databaseUser.PasswordHash, databaseUser.PasswordSalt)
+                ? null
+                : databaseUser;
         }
 
         private JwtSecurityToken GenerateAccessToken(User user)
@@ -127,7 +131,7 @@ namespace EthereumBasedFileStorage.Services
                 config["Tokens:Issuer"],
                 config["Tokens:Issuer"],
                 claims,
-                expires: DateTime.Now.AddDays(10),
+                expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: credentials);
             return token;
         }
@@ -172,6 +176,116 @@ namespace EthereumBasedFileStorage.Services
             }
 
             return true;
+        }
+
+        public Token GetNewTokenOrDefault(Token token)
+        {
+            var principal = GetPrincipalFromTokenOrDefault(token.AccessToken);
+
+            if (principal == null)
+                return null;
+
+            var username = principal.Identity.Name;
+            var savedRefreshToken = GetRefreshToken(username);
+
+            if (savedRefreshToken != token.RefreshToken)
+            {
+                return null;
+            }
+
+            var newAccessToken = RefreshAccessToken(principal.Claims);
+            var newRefreshToken = GenerateRefreshToken();
+
+            DeleteRefreshToken(username, token.RefreshToken);
+            SaveRefreshToken(username, newRefreshToken);
+
+            return new Token(username, newAccessToken, newRefreshToken);
+        }
+
+        private string RefreshAccessToken(IEnumerable<Claim> claims)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Tokens:Key"]));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
+
+            var token = new JwtSecurityToken(
+                config["Tokens:Issuer"],
+                config["Tokens:Issuer"],
+                claims,
+                expires: DateTime.Now.AddMinutes(10),
+                signingCredentials: credentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private static string GetRefreshToken(string username)
+        {
+            using var dbContext = new FileStorageContext();
+            var user = dbContext.Users.FirstOrDefault(u => u.Username == username);
+
+            return user != null ? user.RefreshToken : string.Empty;
+        }
+
+        private static void DeleteRefreshToken(string username, string refreshToken)
+        {
+            using var dbContext = new FileStorageContext();
+            var user = dbContext.Users.FirstOrDefault(u => u.Username == username);
+
+            if (user == null)
+                return;
+
+            if (refreshToken != user.RefreshToken)
+            {
+                throw new SecurityTokenException("Wrong refresh token");
+            }
+
+            user.RefreshToken = null;
+            dbContext.SaveChanges();
+        }
+
+        private static void SaveRefreshToken(string username, string newRefreshToken)
+        {
+            using var dbContext = new FileStorageContext();
+            var user = dbContext.Users.FirstOrDefault(u => u.Username == username);
+
+            if (user == null)
+                return;
+
+            user.RefreshToken = newRefreshToken;
+            dbContext.SaveChanges();
+        }
+
+        private ClaimsPrincipal GetPrincipalFromTokenOrDefault(string accessToken)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Tokens:Key"])),
+                ValidateLifetime = false //here we are saying that we don't care about the token's expiration date
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            ClaimsPrincipal principal;
+
+            try
+            {
+                principal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out securityToken);
+            }
+            catch
+            {
+                return null;
+            }
+
+            if (!(securityToken is JwtSecurityToken jwtSecurityToken) || !jwtSecurityToken.Header.Alg.Equals(
+                SecurityAlgorithms.HmacSha512,
+                StringComparison.InvariantCultureIgnoreCase))
+            {
+                return null;
+            }
+
+            return principal;
         }
     }
 }

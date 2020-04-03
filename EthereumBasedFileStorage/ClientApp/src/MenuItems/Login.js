@@ -10,7 +10,6 @@ import { authHeader } from "../Helpers/AuthorizationHeader";
 import { UserContext } from "../Context/UserContext";
 import { fetchRequest } from "../Helpers/AuthMiddleware";
 
-
 const useStyles = makeStyles(theme => ({
   margin: {
     margin: theme.spacing(1),

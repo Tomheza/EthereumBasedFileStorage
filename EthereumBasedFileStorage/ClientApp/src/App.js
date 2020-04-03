@@ -6,7 +6,8 @@ import Register from "./MenuItems/Register";
 import Login from "./MenuItems/Login";
 import { UserProvider } from "./Context/UserContext";
 
-export default function App(props) {
+const App = () => {
+  console.log('I am rendering')
   return (
     <BrowserRouter>
       <UserProvider>
@@ -20,3 +21,5 @@ export default function App(props) {
     </BrowserRouter>
   );
 }
+
+export default App;

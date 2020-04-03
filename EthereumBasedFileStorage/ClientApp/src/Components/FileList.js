@@ -28,7 +28,6 @@ export default function FileList(props) {
     axios
       .get("/file", requestOptions)
       .then(result => {
-        console.log(result.data);
         setFiles(result.data);
       })
       .catch(error => {
@@ -53,7 +52,7 @@ export default function FileList(props) {
                 {files.map(file => (
                   <TableRow>
                     <TableCell component="th" scope="row">
-                      {file.name}
+                      {file.fileName}
                     </TableCell>
                     <TableCell>{file.modified}</TableCell>
                     <TableCell>{file.user}</TableCell>
