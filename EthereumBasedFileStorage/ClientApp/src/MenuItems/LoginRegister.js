@@ -19,12 +19,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Register = props => {
+// TODO [TZ]: Better name could be tought of
+
+const LoginRegister = props => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [userDisplayName, setUserDisplayName] = useContext(UserContext);
 
-  var registerEndpoint = "user/register";
+  var workflow = props.workflow;
+
+  var workflowEndPoint = "user/" + workflow.toString().toLowerCase();
   var history = props.history;
   const style = useStyles();
 
@@ -34,7 +38,7 @@ const Register = props => {
       Password: password
     };
 
-    var registerRequest = {
+    var workflowRequest = {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -42,7 +46,7 @@ const Register = props => {
       body: JSON.stringify(accountInfo)
     };
 
-    fetchRequest(registerEndpoint, registerRequest)
+    fetchRequest(workflowEndPoint, workflowRequest)
       .then(response => {
         localStorage.setItem("accessToken", response.accessToken);
         localStorage.setItem("refreshToken", response.refreshToken);
@@ -83,9 +87,9 @@ const Register = props => {
         onClick={onRegister}
         className={style.margin}
       >
-        Register
+        {workflow}
       </Button>
     </Box>
   );
 };
-export default Register;
+export default LoginRegister;

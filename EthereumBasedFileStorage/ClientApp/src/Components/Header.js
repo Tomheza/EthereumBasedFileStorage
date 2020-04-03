@@ -24,10 +24,6 @@ const Header = () => {
   var history = useHistory();
   var style = useStyles();
 
-  useEffect(() => {
-
-  }, [userDisplayName]);
-
   const onClick = () => {
     history.push("/");
   };

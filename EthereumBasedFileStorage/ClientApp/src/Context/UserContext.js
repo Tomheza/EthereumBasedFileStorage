@@ -22,7 +22,7 @@ export const UserProvider = props => {
         localStorage.setItem("accessToken", jsonRefreshResponse.accessToken);
         localStorage.setItem("refreshToken", jsonRefreshResponse.refreshToken);
       }
-      {
+      else{
         setUserDisplayName("");
       }
     }

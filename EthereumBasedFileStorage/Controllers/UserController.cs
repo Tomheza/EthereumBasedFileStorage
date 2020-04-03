@@ -21,14 +21,14 @@ namespace EthereumBasedFileStorage.Controllers
         [Route("register")]
         public IActionResult Register(User user)
         {
-            var registeredUser = userService.Register(user);
+            var registeredUserToken = userService.Register(user);
 
-            if (registeredUser == null)
+            if (registeredUserToken == null)
             {
                 return BadRequest("User already exists");
             }
 
-            return Ok(new {placeholder = "check this out later"});
+            return Ok(registeredUserToken);
         }
 
         [HttpPost]
