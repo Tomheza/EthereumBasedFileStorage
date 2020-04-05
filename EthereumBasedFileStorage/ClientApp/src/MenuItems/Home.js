@@ -11,7 +11,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Home = () => {
-  const [userDisplayName, setUserDisplayName] = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const [userDisplayName, setUserDisplayName] = user;
   var style = useStyles();
   return (
     <div>

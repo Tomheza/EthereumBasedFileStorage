@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Route, BrowserRouter } from "react-router-dom";
 import Header from "./Components/Header";
 import Home from "./MenuItems/Home";
@@ -6,7 +6,6 @@ import { UserProvider } from "./Context/UserContext";
 import LoginRegister from "./MenuItems/LoginRegister";
 
 const App = () => {
-  console.log("I am rendering");
   return (
     <BrowserRouter>
       <UserProvider>
@@ -15,11 +14,11 @@ const App = () => {
           <Route exact path="/" component={Home} />
           <Route
             path="/register"
-            render={props => <LoginRegister {...props} workflow="Register" />}
+            render={(props) => <LoginRegister {...props} workflow="Register" />}
           />
           <Route
             path="/login"
-            render={props => <LoginRegister {...props} workflow="Login" />}
+            render={(props) => <LoginRegister {...props} workflow="Login" />}
           />
         </div>
       </UserProvider>

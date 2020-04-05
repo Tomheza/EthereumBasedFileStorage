@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using EthereumBasedFileStorage.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,15 +24,15 @@ namespace EthereumBasedFileStorage.Controllers
 
         [HttpPost]
         [Route("upload")]
-        public async void UploadFile()
+        public async Task<Services.Models.File> UploadFile()
         {
             if (Request.Form.Files.Count == 0)
-                return;
+                return null;
 
             var file = Request.Form.Files[0];
 
             if (!(file?.Length > 0)) 
-                return;
+                return null;
 
             await using var ms = new MemoryStream();
             await file.CopyToAsync(ms);
@@ -41,9 +42,7 @@ namespace EthereumBasedFileStorage.Controllers
 
 
             var storedFile = fileStorageService.StoreFile(fileName, fileBytes);
-            //_fileStorageService.
-
-            
+            return storedFile;
         }
     }
 }

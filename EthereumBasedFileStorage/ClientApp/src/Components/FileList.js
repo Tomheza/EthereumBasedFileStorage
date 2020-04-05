@@ -50,7 +50,7 @@ export default function FileList(props) {
               </TableHead>
               <TableBody>
                 {files.map(file => (
-                  <TableRow>
+                  <TableRow key={file.Id}>
                     <TableCell component="th" scope="row">
                       {file.fileName}
                     </TableCell>

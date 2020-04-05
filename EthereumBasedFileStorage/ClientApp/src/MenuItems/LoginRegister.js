@@ -1,30 +1,25 @@
 import React, { useState, useCallback, useContext } from "react";
-import {
-  Container,
-  Box,
-  Button,
-  TextField,
-  makeStyles
-} from "@material-ui/core";
+import { Box, Button, TextField, makeStyles } from "@material-ui/core";
 import { fetchRequest } from "../Helpers/AuthMiddleware";
 import { UserContext } from "../Context/UserContext";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
-    width: "25%"
+    width: "25%",
   },
   maxWidth: {
-    width: "100%"
-  }
+    width: "100%",
+  },
 }));
 
 // TODO [TZ]: Better name could be tought of
 
-const LoginRegister = props => {
+const LoginRegister = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [userDisplayName, setUserDisplayName] = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const [userDisplayName, setUserDisplayName] = user;
 
   var workflow = props.workflow;
 
@@ -35,25 +30,25 @@ const LoginRegister = props => {
   const onRegister = useCallback(() => {
     var accountInfo = {
       Username: username,
-      Password: password
+      Password: password,
     };
 
     var workflowRequest = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(accountInfo)
+      body: JSON.stringify(accountInfo),
     };
 
     fetchRequest(workflowEndPoint, workflowRequest)
-      .then(response => {
+      .then((response) => {
         localStorage.setItem("accessToken", response.accessToken);
         localStorage.setItem("refreshToken", response.refreshToken);
         setUserDisplayName(response.username);
         history.push("/");
       })
-      .catch(error => console.log(error));
+      .catch((error) => console.log(error));
   }, [username, password]);
 
   return (
@@ -69,7 +64,7 @@ const LoginRegister = props => {
         label="Username"
         variant="outlined"
         className={style.margin}
-        onChange={event => setUsername(event.target.value)}
+        onChange={(event) => setUsername(event.target.value)}
         value={username}
       ></TextField>
       <TextField
@@ -78,7 +73,7 @@ const LoginRegister = props => {
         type="password"
         variant="outlined"
         className={style.margin}
-        onChange={event => setPassword(event.target.value)}
+        onChange={(event) => setPassword(event.target.value)}
         value={password}
       ></TextField>
       <Button

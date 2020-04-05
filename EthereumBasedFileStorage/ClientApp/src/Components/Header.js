@@ -20,7 +20,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Header = () => {
-  const [userDisplayName, setUserDisplayName] = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const [userDisplayName, setUserDisplayName] = user;
   var history = useHistory();
   var style = useStyles();
 
@@ -48,8 +49,7 @@ const Header = () => {
         <Typography variant="h5" className={style.title} onClick={onClick}>
           ETH File Storage
         </Typography>
-        <Typography variant="h4">{userDisplayName}</Typography>
-
+        <Typography variant="h6">{userDisplayName}</Typography>
         {userDisplayName === '' && (
           <div>
             <Button color="inherit" onClick={onLogin}>

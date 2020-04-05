@@ -13,6 +13,7 @@ namespace EthereumBasedFileStorage.Services
             using var dbContext = new FileStorageContext();
             return dbContext.Files.ToArray().Select(f => new Models.File
             {
+                Id = f.Id,
                 FileName = f.FileName,
                 Modified = f.Modified.ToString(CultureInfo.InvariantCulture),
             }).ToArray();
