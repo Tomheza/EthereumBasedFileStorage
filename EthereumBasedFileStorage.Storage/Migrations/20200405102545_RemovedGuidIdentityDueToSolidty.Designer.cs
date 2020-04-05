@@ -4,14 +4,16 @@ using EthereumBasedFileStorage.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EthereumBasedFileStorage.Storage.Migrations
 {
     [DbContext(typeof(FileStorageContext))]
-    partial class FileStorageContextModelSnapshot : ModelSnapshot
+    [Migration("20200405102545_RemovedGuidIdentityDueToSolidty")]
+    partial class RemovedGuidIdentityDueToSolidty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,7 +23,7 @@ namespace EthereumBasedFileStorage.Storage.Migrations
 
             modelBuilder.Entity("EthereumBasedFileStorage.Storage.Models.File", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("FileId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -38,7 +40,7 @@ namespace EthereumBasedFileStorage.Storage.Migrations
                     b.Property<DateTime>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                    b.HasKey("FileId");
 
                     b.ToTable("Files");
                 });

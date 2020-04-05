@@ -4,14 +4,16 @@ using EthereumBasedFileStorage.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EthereumBasedFileStorage.Storage.Migrations
 {
     [DbContext(typeof(FileStorageContext))]
-    partial class FileStorageContextModelSnapshot : ModelSnapshot
+    [Migration("20200405102638_AddFileIntIdInsteadOfGuidDueToSolidity")]
+    partial class AddFileIntIdInsteadOfGuidDueToSolidity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

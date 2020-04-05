@@ -2,8 +2,8 @@
 {
     public class File
     {
+        public int Id { get; set; }
         public string FileName { get; set; }
         public string Modified { get; set; }
-        public string User { get; set; }
     }
 }
