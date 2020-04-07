@@ -25,14 +25,21 @@ export default function UploadFile() {
     setFileName(e.target.files[0].name);
   };
 
-  const UploadFileToEth = (file) => {
-    console.log(ethAccount);
+  const UploadFileToEth = async (file) => {
+    // TODO [TZ]: If eth account is not present do not allow to store file. Or I might need to do a validation at the higher level.
+
+    console.log('file uploading is happening');
+    console.log(file.id);
+    console.log(userDisplayName);
+    console.log("Eth account: " + ethAccount);
     console.log(fileStorage);
-    console.log(fileStorage.methods);
-    fileStorage.methods
-      .storeFile(file.id, userDisplayName)
-      .send({ from: ethAccount })
-      .once("receipt", (receipt) => {});
+    
+    await fileStorage.storeFile(file.id, userDisplayName, {from: "0x52A9aEe1B1E1db44FF33C4b308eA5C86b39E4b57", gas:100000});
+    // fileStorage.methods
+    //   .storeFile(file.id, userDisplayName)
+    //   .send({ from: ethAccount })
+    //   .on('error', (error) => {console.log})
+    //   .once("receipt", (receipt) => {});
   };
 
   const onSubmit = async (e) => {

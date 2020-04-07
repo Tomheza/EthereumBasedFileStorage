@@ -37,11 +37,7 @@ namespace EthereumBasedFileStorage.Controllers
             await using var ms = new MemoryStream();
             await file.CopyToAsync(ms);
 
-            var fileBytes = ms.ToArray();
-            var fileName = file.FileName;
-
-
-            var storedFile = fileStorageService.StoreFile(fileName, fileBytes);
+            var storedFile = fileStorageService.StoreFile(file.FileName, ms.ToArray());
             return storedFile;
         }
     }

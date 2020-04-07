@@ -1,7 +1,8 @@
 import React, { useState, createContext, useEffect } from "react";
 import { refresh } from "../Helpers/RefreshToken";
 import Web3 from "web3";
-import { FILE_STORAGE_ABI, FILE_STORAGE_ADDRESS } from "../Helpers/config";
+import FileStorageJson from "../build/contracts/FileStorage.json";
+import TruffleContract from 'truffle-contract'
 
 export const UserContext = createContext();
 
@@ -14,6 +15,8 @@ export const UserProvider = (props) => {
     // this will only run once
 
     async function tryToRefreshToken() {
+
+      console.log(window.ethereum);
       var accessToken = localStorage.getItem("accessToken");
       var refreshToken = localStorage.getItem("refreshToken");
 
@@ -30,12 +33,14 @@ export const UserProvider = (props) => {
     }
 
     async function loadWeb3() {
-      const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
+      const web3 = new Web3(Web3.givenProvider);
       const accounts = await web3.eth.getAccounts();
-      const storage = new web3.eth.Contract(
-        FILE_STORAGE_ABI,
-        FILE_STORAGE_ADDRESS
-      );
+    
+      console.log(accounts);
+
+      var truffleFileStorage = TruffleContract(FileStorageJson);
+      truffleFileStorage.setProvider(web3.currentProvider);
+      var storage = await truffleFileStorage.deployed();
       setEthAccount(accounts[0]);
       setFileStorage(storage);
     }

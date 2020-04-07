@@ -16,11 +16,8 @@ contract FileStorage {
         string username
     );
 
-    constructor() public {
-        storeFile(1, "Tomhza");
-    }
-
     function storeFile(uint _id, string memory _username) public {
+        fileCount++;
         files[_id] = File(_id, _username);
         emit FileStored(_id, _username);
     }
