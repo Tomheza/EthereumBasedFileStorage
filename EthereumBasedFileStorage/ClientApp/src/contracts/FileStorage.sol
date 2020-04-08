@@ -6,19 +6,23 @@ contract FileStorage {
 
     struct File {
         uint id;
-        string username;
+        uint userId;
     }
 
-    mapping(uint => File) public files;
+    mapping(uint => uint[]) public files;
 
     event FileStored(
         uint id,
-        string username
+        uint userId
     );
 
-    function storeFile(uint _id, string memory _username) public {
+    function storeFile(uint _userId, uint _id) public {
         fileCount++;
-        files[_id] = File(_id, _username);
-        emit FileStored(_id, _username);
+        files[_userId].push(_id);
+        emit FileStored(_id, _userId);
+    }
+
+    function getFiles(uint _userId) public view returns (uint[] memory outFiles){
+        outFiles = files[_userId];
     }
 }

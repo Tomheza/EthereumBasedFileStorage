@@ -81,7 +81,7 @@ namespace EthereumBasedFileStorage.Services
             var refreshToken = GenerateRefreshToken();
             SaveRefreshToken(refreshToken, user);
 
-            return new Token(user.Username, new JwtSecurityTokenHandler().WriteToken(accessToken), refreshToken);
+            return new Token(user.Id, user.Username, new JwtSecurityTokenHandler().WriteToken(accessToken), refreshToken);
         }
 
         private static void SaveRefreshToken(string token, User user)
@@ -196,10 +196,18 @@ namespace EthereumBasedFileStorage.Services
             var newAccessToken = RefreshAccessToken(principal.Claims);
             var newRefreshToken = GenerateRefreshToken();
 
+            // TODO There's 3 times that I create db context in a row, fix that.
+
+            using var dbContext = new FileStorageContext();
+            var user = dbContext.Users.FirstOrDefault(u => u.Username == username);
+
+            if (user == null)
+                return null;
+
             DeleteRefreshToken(username, token.RefreshToken);
             SaveRefreshToken(username, newRefreshToken);
 
-            return new Token(username, newAccessToken, newRefreshToken);
+            return new Token(user.Id, username, newAccessToken, newRefreshToken);
         }
 
         private string RefreshAccessToken(IEnumerable<Claim> claims)

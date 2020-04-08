@@ -7,6 +7,7 @@ import TruffleContract from 'truffle-contract'
 export const UserContext = createContext();
 
 export const UserProvider = (props) => {
+  const [userId, setUserId] = useState("");
   const [userDisplayName, setUserDisplayName] = useState("");
   const [ethAccount, setEthAccount] = useState("");
   const [fileStorage, setFileStorage] = useState({});
@@ -25,6 +26,7 @@ export const UserProvider = (props) => {
       if (refreshResponse.ok) {
         var jsonRefreshResponse = await refreshResponse.json();
         setUserDisplayName(jsonRefreshResponse.username);
+        setUserId(jsonRefreshResponse.id);
         localStorage.setItem("accessToken", jsonRefreshResponse.accessToken);
         localStorage.setItem("refreshToken", jsonRefreshResponse.refreshToken);
       } else {
@@ -55,6 +57,7 @@ export const UserProvider = (props) => {
         user: [userDisplayName, setUserDisplayName],
         account: [ethAccount, setEthAccount],
         storage: [fileStorage, setFileStorage],
+        id: [userId, setUserId]
       }}
     >
       {props.children}

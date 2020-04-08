@@ -20,8 +20,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Header = () => {
-  const { user } = useContext(UserContext);
+  const { user, id } = useContext(UserContext);
   const [userDisplayName, setUserDisplayName] = user;
+  const [userId, setUserId] = user;
   var history = useHistory();
   var style = useStyles();
 
@@ -41,6 +42,7 @@ const Header = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     setUserDisplayName("");
+    setUserId("");
   }
 
   return (

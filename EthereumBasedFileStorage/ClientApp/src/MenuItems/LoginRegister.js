@@ -18,8 +18,10 @@ const useStyles = makeStyles((theme) => ({
 const LoginRegister = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { user } = useContext(UserContext);
+  // TODO [TZ]: I can use an object for user state management
+  const { user, id } = useContext(UserContext);
   const [userDisplayName, setUserDisplayName] = user;
+  const [userId, setUserId] = id;
 
   var workflow = props.workflow;
 
@@ -46,6 +48,7 @@ const LoginRegister = (props) => {
         localStorage.setItem("accessToken", response.accessToken);
         localStorage.setItem("refreshToken", response.refreshToken);
         setUserDisplayName(response.username);
+        setUserId(response.id);
         history.push("/");
       })
       .catch((error) => console.log(error));
