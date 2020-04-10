@@ -2,13 +2,12 @@ import React, { useState, createContext, useEffect } from "react";
 import { refresh } from "../Helpers/RefreshToken";
 import Web3 from "web3";
 import FileStorageJson from "../build/contracts/FileStorage.json";
-import TruffleContract from 'truffle-contract'
+import TruffleContract from "truffle-contract";
 
 export const UserContext = createContext();
 
 export const UserProvider = (props) => {
-  const [userId, setUserId] = useState("");
-  const [userDisplayName, setUserDisplayName] = useState("");
+  const [user, setUser] = useState({ userDisplayName: "", userId: "" });
   const [ethAccount, setEthAccount] = useState("");
   const [fileStorage, setFileStorage] = useState({});
 
@@ -23,12 +22,14 @@ export const UserProvider = (props) => {
 
       if (refreshResponse.ok) {
         var jsonRefreshResponse = await refreshResponse.json();
-        setUserDisplayName(jsonRefreshResponse.username);
-        setUserId(jsonRefreshResponse.id);
+        setUser({
+          userDisplayName: jsonRefreshResponse.username,
+          userId: jsonRefreshResponse.id,
+        });
         localStorage.setItem("accessToken", jsonRefreshResponse.accessToken);
         localStorage.setItem("refreshToken", jsonRefreshResponse.refreshToken);
       } else {
-        setUserDisplayName("");
+        setUser({ userDisplayName: "", userId: "" });
       }
     }
 
@@ -39,6 +40,11 @@ export const UserProvider = (props) => {
       var truffleFileStorage = TruffleContract(FileStorageJson);
       truffleFileStorage.setProvider(web3.currentProvider);
       var storage = await truffleFileStorage.deployed();
+
+
+      console.log('Storage set: ' + storage);
+      console.log('Account set: ' + accounts[0]);
+
       setEthAccount(accounts[0]);
       setFileStorage(storage);
     }
@@ -50,10 +56,9 @@ export const UserProvider = (props) => {
   return (
     <UserContext.Provider
       value={{
-        user: [userDisplayName, setUserDisplayName],
+        userInfo: [user, setUser],
         account: [ethAccount, setEthAccount],
         storage: [fileStorage, setFileStorage],
-        id: [userId, setUserId]
       }}
     >
       {props.children}

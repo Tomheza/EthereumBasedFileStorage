@@ -20,9 +20,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Header = () => {
-  const { user, id } = useContext(UserContext);
-  const [userDisplayName, setUserDisplayName] = user;
-  const [userId, setUserId] = user;
+  const { userInfo, id } = useContext(UserContext);
+  const [user, setUser] = userInfo;
   var history = useHistory();
   var style = useStyles();
 
@@ -41,8 +40,7 @@ const Header = () => {
   const onLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    setUserDisplayName("");
-    setUserId("");
+    setUser({userDisplayName:"", userId:""});
   }
 
   return (
@@ -51,8 +49,8 @@ const Header = () => {
         <Typography variant="h5" className={style.title} onClick={onClick}>
           ETH File Storage
         </Typography>
-        <Typography variant="h6">{userDisplayName}</Typography>
-        {userDisplayName === '' && (
+        <Typography variant="h6">{user.userDisplayName}</Typography>
+        {user.userDisplayName === '' && (
           <div>
             <Button color="inherit" onClick={onLogin}>
               Login
@@ -63,7 +61,7 @@ const Header = () => {
           </div>
         )}
 
-        {userDisplayName !== '' && (
+        {user.userDisplayName !== '' && (
           <Button color="inherit" onClick={onLogout}>
             Logout
           </Button>

@@ -11,19 +11,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Home = () => {
-  const { user } = useContext(UserContext);
-  const [userDisplayName, setUserDisplayName] = user;
+  const { userInfo } = useContext(UserContext);
+  const [user, setUser] = userInfo;
   var style = useStyles();
 
   return (
     <div>
-      {userDisplayName !== "" && (
+      {user.userDisplayName !== "" && (
         <div>
           <UploadFile />
           <FileList/>
         </div>
       )}
-      {userDisplayName === "" && (
+      {user.userDisplayName === "" && (
         <Box
           m={3}
           display="flex"

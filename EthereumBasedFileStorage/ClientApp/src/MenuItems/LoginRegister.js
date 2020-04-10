@@ -13,15 +13,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// TODO [TZ]: Better name could be tought of
-
 const LoginRegister = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  // TODO [TZ]: I can use an object for user state management
-  const { user, id } = useContext(UserContext);
-  const [userDisplayName, setUserDisplayName] = user;
-  const [userId, setUserId] = id;
+  const { userInfo, id } = useContext(UserContext);
+  const [user, setUser] = userInfo;
 
   var workflow = props.workflow;
 
@@ -47,8 +43,16 @@ const LoginRegister = (props) => {
       .then((response) => {
         localStorage.setItem("accessToken", response.accessToken);
         localStorage.setItem("refreshToken", response.refreshToken);
-        setUserDisplayName(response.username);
-        setUserId(response.id);
+
+        console.log(response.username);
+        console.log(response.id);
+
+        var userObject = {
+          userDisplayName: response.username,
+          userId: response.id
+        };
+        setUser(userObject);
+        console.log(userObject);
         history.push("/");
       })
       .catch((error) => console.log(error));

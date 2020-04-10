@@ -17,24 +17,29 @@ import { fetchRequest } from "../Helpers/AuthMiddleware";
 
 export default function FileList() {
   const [files, setFiles] = useState([]);
-  const { user, account, storage, id } = useContext(UserContext);
-  const [userDisplayName, setUserDisplayName] = user;
+  const { userInfo, account, storage } = useContext(UserContext);
+  const [user, setUser] = userInfo;
   const [ethAccount, setEthAccount] = account;
   const [fileStorage, setFileStorage] = storage;
-  const [userId, setUserId] = id;
 
   useEffect(() => {
     fetchFileData();
-  }, [account, storage, id]);
+  }, [user, ethAccount, fileStorage]);
 
   const fetchFileData = async () => {
-    console.log("File storage: " + fileStorage);
     console.log("Trying to get files");
+    console.log("File storage: " + fileStorage);
     console.log("Eth account: " + ethAccount);
-    console.log("User id: " + userId);
+    console.log("User id: " + user.userId);
 
     if (fileStorage.getFiles) {
-      var fileIds = await fileStorage.getFiles(userId);
+      var fileIds = [];
+      try {
+        
+        fileIds = await fileStorage.getFiles(user.userId);
+      } catch (error) {
+        console.log(error);
+      }
 
       var fileIdArray = [];
 
