@@ -13,10 +13,11 @@ const useStyles = makeStyles((theme) => ({
 export default function UploadFile() {
   const [file, setFile] = useState("");
   const [fileName, setFileName] = useState("Upload file");
-  const { user, account, storage } = useContext(UserContext);
+  const { user, account, storage, id } = useContext(UserContext);
   const [userDisplayName, setUserDisplayName] = user;
   const [ethAccount, setEthAccount] = account;
   const [fileStorage, setFileStorage] = storage;
+  const [userId, setUserId] = id;
 
   const classes = useStyles();
 
@@ -34,12 +35,7 @@ export default function UploadFile() {
     console.log("Eth account: " + ethAccount);
     console.log(fileStorage);
     
-    await fileStorage.storeFile(file.id, userDisplayName, {from: "0x52A9aEe1B1E1db44FF33C4b308eA5C86b39E4b57", gas:100000});
-    // fileStorage.methods
-    //   .storeFile(file.id, userDisplayName)
-    //   .send({ from: ethAccount })
-    //   .on('error', (error) => {console.log})
-    //   .once("receipt", (receipt) => {});
+    await fileStorage.storeFile(userId, file.id, {from: "0x52A9aEe1B1E1db44FF33C4b308eA5C86b39E4b57", gas:100000});
   };
 
   const onSubmit = async (e) => {

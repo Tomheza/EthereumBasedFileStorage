@@ -4,22 +4,23 @@ import FileList from "../Components/FileList";
 import { UserContext } from "../Context/UserContext";
 import { Box, Typography, makeStyles } from "@material-ui/core";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   maxWidth: {
-    width: "99%"
-  }
+    width: "99%",
+  },
 }));
 
 const Home = () => {
   const { user } = useContext(UserContext);
   const [userDisplayName, setUserDisplayName] = user;
   var style = useStyles();
+
   return (
     <div>
       {userDisplayName !== "" && (
         <div>
           <UploadFile />
-          <FileList />
+          <FileList/>
         </div>
       )}
       {userDisplayName === "" && (

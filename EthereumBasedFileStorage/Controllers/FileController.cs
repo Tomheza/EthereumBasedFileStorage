@@ -16,10 +16,10 @@ namespace EthereumBasedFileStorage.Controllers
             this.fileStorageService = fileStorageService;
         }
 
-        [HttpGet]
-        public Services.Models.File[] GetFiles()
+        [HttpPost]
+        public Services.Models.File[] GetFiles(int[] fileIds)
         {
-            return fileStorageService.GetFiles();
+            return fileStorageService.GetFiles(fileIds);
         }
 
         [HttpPost]

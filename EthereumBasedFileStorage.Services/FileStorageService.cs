@@ -8,10 +8,10 @@ namespace EthereumBasedFileStorage.Services
 {
     public class FileStorageService : IFileStorageService
     {
-        public File[] GetFiles()
+        public File[] GetFiles(int[] fileIds)
         {
             using var dbContext = new FileStorageContext();
-            return dbContext.Files.ToArray().Select(f => new Models.File
+            return dbContext.Files.Where(x => fileIds.Contains(x.Id)).Select(f => new Models.File
             {
                 Id = f.Id,
                 FileName = f.FileName,

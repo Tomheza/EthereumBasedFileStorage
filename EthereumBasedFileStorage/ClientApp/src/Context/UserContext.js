@@ -16,8 +16,6 @@ export const UserProvider = (props) => {
     // this will only run once
 
     async function tryToRefreshToken() {
-
-      console.log(window.ethereum);
       var accessToken = localStorage.getItem("accessToken");
       var refreshToken = localStorage.getItem("refreshToken");
 
@@ -37,8 +35,6 @@ export const UserProvider = (props) => {
     async function loadWeb3() {
       const web3 = new Web3(Web3.givenProvider);
       const accounts = await web3.eth.getAccounts();
-    
-      console.log(accounts);
 
       var truffleFileStorage = TruffleContract(FileStorageJson);
       truffleFileStorage.setProvider(web3.currentProvider);
